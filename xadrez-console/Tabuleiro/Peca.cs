@@ -26,6 +26,27 @@
             return p == null || p.cor != cor;
         }
 
+        public bool existemMovimentosPossiveis()
+        {
+            bool[,] p = movimentosPossiveis();
+            for(int i = 0; i<tab.linhas; i++)
+            {
+                for(int j = 0; j<tab.colunas; j++)
+                {
+                    if(p[i,j])
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool podeMoverPara(Posicao destino)
+        {
+            return movimentosPossiveis()[destino.linha, destino.coluna];
+        }
+
         public abstract bool[,] movimentosPossiveis();
     }
 }
