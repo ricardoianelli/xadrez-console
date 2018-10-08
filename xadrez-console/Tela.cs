@@ -14,14 +14,30 @@ namespace xadrez_console
                 for(int j=0; j<tab.colunas; j++)
                 {
                     Peca pecaAtual = tab.peca(i, j);
-                    if (pecaAtual != null)
+                    imprimirPeca(pecaAtual);
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine("  a b c d e f g h");
+        }
+
+        public static void imprimirTela(Tabuleiro tab, bool[,] possibilidades)
+        {
+            ConsoleColor fundoOriginal = Console.BackgroundColor;
+            ConsoleColor fundoAlterado = ConsoleColor.DarkGray;
+
+            for (int i = 0; i < tab.linhas; i++)
+            {
+                Console.Write(8 - i + " ");
+                for (int j = 0; j < tab.colunas; j++)
+                {
+                    Peca pecaAtual = tab.peca(i, j);
+                    if(possibilidades[i,j])
                     {
-                        imprimirPeca(pecaAtual);
+                        Console.BackgroundColor = fundoAlterado;
                     }
-                    else
-                    {
-                        Console.Write("- ");
-                    }
+                    imprimirPeca(pecaAtual);
+                    Console.BackgroundColor = fundoOriginal;
                 }
                 Console.WriteLine();
             }
@@ -38,6 +54,11 @@ namespace xadrez_console
 
         public static void imprimirPeca(Peca peca)
         {
+            if(peca == null)
+            {
+               Console.Write("- ");
+               return;
+            }
             if(peca.cor == Cor.Branca)
             {
                 Console.Write(peca+ " ");

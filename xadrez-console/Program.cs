@@ -16,10 +16,13 @@ namespace xadrez_console
                     Console.Clear();
                     Tela.imprimirTela(partidaAtual.tab);
 
-                    Console.WriteLine();
-                    Console.Write("Origem: ");
+                    Console.Write("\nOrigem: ");
                     Posicao origem = Tela.lerPosicaoXadrez().toPosicao();
-                    Console.Write("Destino: ");
+                    bool[,] possibilidades = partidaAtual.tab.peca(origem).movimentosPossiveis();
+                    Console.Clear();
+                    Tela.imprimirTela(partidaAtual.tab, possibilidades);
+
+                    Console.Write("\nDestino: ");
                     Posicao destino = Tela.lerPosicaoXadrez().toPosicao();
                     partidaAtual.executarMovimento(origem, destino);
                 }
