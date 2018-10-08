@@ -11,6 +11,7 @@ namespace xadrez_console
         {
             imprimirTabuleiro(partida.tab);
             imprimirPecasCapturadas(partida);
+            
             Console.WriteLine("\n\nTurno: " + partida.turno);
             if(partida.xeque)
             {
@@ -22,7 +23,18 @@ namespace xadrez_console
                 {
                     Console.WriteLine("XEQUE!");
                 }
-                
+            }
+            if (partida.terminada)
+            {
+                if (partida.jogadorAtual == Cor.Preta)
+                {
+                    WriteLineColorido(ConsoleColor.Yellow, "Xeque-Mate!\nVencedor: " + partida.jogadorAtual);
+                }
+                else
+                {
+                    Console.WriteLine("Xeque-Mate!\nVencedor: " + partida.jogadorAtual);
+                }
+                return;
             }
             Console.Write("Aguardando jogada: ");
             if (partida.jogadorAtual == Cor.Preta)
