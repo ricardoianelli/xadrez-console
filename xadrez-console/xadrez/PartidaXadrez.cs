@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using tabuleiro;
 
 namespace xadrez
@@ -9,32 +10,43 @@ namespace xadrez
         public int turno { get; private set; }
         public Cor jogadorAtual { get; private set; }
         public bool terminada { get; private set; }
+        public HashSet<Peca> pecas;
+        public HashSet<Peca> capturadas;
 
         public PartidaXadrez()
         {
             tab = new Tabuleiro(8, 8);
-            colocarPecas();
             turno = 1;
             jogadorAtual = Cor.Branca;
             terminada = false;
+            pecas = new HashSet<Peca>();
+            capturadas = new HashSet<Peca>();
+            colocarPecas();
         }
 
         private void colocarPecas()
         {
             // Brancas
-            tab.adicionarPeca(new Torre(tab, Cor.Branca), new PosicaoXadrez(1, 'c').toPosicao());
-            tab.adicionarPeca(new Torre(tab, Cor.Branca), new PosicaoXadrez(2, 'c').toPosicao());
-            tab.adicionarPeca(new Torre(tab, Cor.Branca), new PosicaoXadrez(2, 'd').toPosicao());
-            tab.adicionarPeca(new Torre(tab, Cor.Branca), new PosicaoXadrez(1, 'e').toPosicao());
-            tab.adicionarPeca(new Torre(tab, Cor.Branca), new PosicaoXadrez(2, 'e').toPosicao());
-            tab.adicionarPeca(new Rei(tab, Cor.Branca), new PosicaoXadrez(1, 'd').toPosicao());
+            colocarNovaPeca(1, 'c', new Torre(tab, Cor.Branca));
+            colocarNovaPeca(2, 'c', new Torre(tab, Cor.Branca));
+            colocarNovaPeca(2, 'd', new Torre(tab, Cor.Branca));
+            colocarNovaPeca(1, 'e', new Torre(tab, Cor.Branca));
+            colocarNovaPeca(2, 'e', new Torre(tab, Cor.Branca));
+            colocarNovaPeca(1, 'd', new Rei(tab, Cor.Branca));
+
             // Pretas
-            tab.adicionarPeca(new Torre(tab, Cor.Preta), new PosicaoXadrez(8, 'c').toPosicao());
-            tab.adicionarPeca(new Torre(tab, Cor.Preta), new PosicaoXadrez(7, 'c').toPosicao());
-            tab.adicionarPeca(new Torre(tab, Cor.Preta), new PosicaoXadrez(7, 'd').toPosicao());
-            tab.adicionarPeca(new Torre(tab, Cor.Preta), new PosicaoXadrez(8, 'e').toPosicao());
-            tab.adicionarPeca(new Torre(tab, Cor.Preta), new PosicaoXadrez(7, 'e').toPosicao());
-            tab.adicionarPeca(new Rei(tab, Cor.Preta), new PosicaoXadrez(8, 'd').toPosicao());
+            colocarNovaPeca(8, 'c', new Torre(tab, Cor.Preta));
+            colocarNovaPeca(7, 'c', new Torre(tab, Cor.Preta));
+            colocarNovaPeca(7, 'd', new Torre(tab, Cor.Preta));
+            colocarNovaPeca(8, 'e', new Torre(tab, Cor.Preta));
+            colocarNovaPeca(7, 'e', new Torre(tab, Cor.Preta));
+            colocarNovaPeca(8, 'd', new Rei(tab, Cor.Preta));
+        }
+
+        public void colocarNovaPeca(int linha, char coluna, Peca peca)
+        {
+            tab.adicionarPeca(peca, new PosicaoXadrez(linha, coluna).toPosicao());
+            pecas.Add(peca);
         }
 
         public void executarMovimento(Posicao origem, Posicao destino)
@@ -43,6 +55,37 @@ namespace xadrez
             p.incrementarQteMovimentos();
             Peca pDest = tab.retirarPeca(destino);
             tab.adicionarPeca(p, destino);
+            if(pDest != null)
+            {
+                capturadas.Add(pDest);
+            }
+        }
+
+        public HashSet<Peca> pecasCapturadas(Cor cor)
+        {
+            HashSet<Peca> aux = new HashSet<Peca>();
+            foreach(Peca x in capturadas)
+            {
+                if(x.cor == cor)
+                {
+                    aux.Add(x);
+                }
+            }
+            return aux;
+        }
+
+        public HashSet<Peca> pecasEmJogo(Cor cor)
+        {
+            HashSet<Peca> aux = new HashSet<Peca>();
+            foreach(Peca x in pecas)
+            {
+                if(x.cor == cor)
+                {
+                    aux.Add(x);
+                }
+            }
+            aux.ExceptWith(pecasCapturadas(cor));
+            return aux;
         }
 
         public void realizaJogada(Posicao origem, Posicao destino)
