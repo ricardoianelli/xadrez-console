@@ -12,7 +12,43 @@ namespace xadrez_console
             imprimirTabuleiro(partida.tab);
             imprimirPecasCapturadas(partida);
             Console.WriteLine("\n\nTurno: " + partida.turno);
-            Console.WriteLine("Aguardando jogada: " + partida.jogadorAtual);
+            if(partida.xeque)
+            {
+                if(partida.jogadorAtual == Cor.Preta)
+                {
+                    WriteLineColorido(ConsoleColor.Yellow, "XEQUE!");
+                }
+                else
+                {
+                    Console.WriteLine("XEQUE!");
+                }
+                
+            }
+            Console.Write("Aguardando jogada: ");
+            if (partida.jogadorAtual == Cor.Preta)
+            {
+                WriteLineColorido(ConsoleColor.Yellow, partida.jogadorAtual +"");
+            }
+            else
+            {
+                Console.WriteLine(partida.jogadorAtual);
+            }
+        }
+
+        public static void WriteLineColorido(ConsoleColor cor, string msg)
+        {
+            ConsoleColor corAntiga = Console.ForegroundColor;
+            Console.ForegroundColor = cor;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = corAntiga;
+        }
+
+        public static void WriteColorido(ConsoleColor cor, string msg)
+        {
+            ConsoleColor corAntiga = Console.ForegroundColor;
+            Console.ForegroundColor = cor;
+            Console.Write(msg);
+            Console.ForegroundColor = corAntiga;
         }
 
         public static void imprimirPecasCapturadas(PartidaXadrez partida)

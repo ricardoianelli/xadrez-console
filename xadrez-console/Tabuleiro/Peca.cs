@@ -20,6 +20,11 @@
             qteMovimentos++;
         }
 
+        public void decrementarQteMovimentos()
+        {
+            qteMovimentos--;
+        }
+
         protected bool podeMover(Posicao pos)
         {
             Peca p = tab.peca(pos);
