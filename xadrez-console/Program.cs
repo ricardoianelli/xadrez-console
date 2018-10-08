@@ -10,15 +10,10 @@ namespace xadrez_console
         {
             try
             {
-                Tabuleiro tab = new Tabuleiro(8, 8);
-                // Adicionar pecas iniciais (teste)
-                tab.adicionarPeca(new Torre(tab, Cor.Preta), new Posicao(0, 0));
-                tab.adicionarPeca(new Torre(tab, Cor.Preta), new Posicao(1, 3));
-                tab.adicionarPeca(new Rei(tab, Cor.Preta), new Posicao(2, 4));
-
-                Tela.imprimirTela(tab);
+                PosicaoXadrez pos = new PosicaoXadrez(7, 'c');
+                Console.WriteLine(pos.toPosicao());
             }
-            catch(tabuleiroException e)
+            catch(TabuleiroException e)
             {
                 Console.WriteLine(e.Message);
             }

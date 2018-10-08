@@ -39,7 +39,7 @@
             }
             else
             {
-                throw new tabuleiroException("Já existe peca nessa posicao. (Pos: " + pos.linha + "/" + pos.coluna + ")");
+                throw new TabuleiroException("Já existe peca nessa posicao. (Pos: " + pos.linha + "/" + pos.coluna + ")");
             }
         }
 
@@ -56,7 +56,7 @@
         {
             if(!posicaoValida(pos))
             {
-                throw new tabuleiroException("Posicao invalida! (Pos: " + pos.linha + "/" + pos.coluna+")");
+                throw new TabuleiroException("Posicao invalida! (Pos: " + pos.linha + "/" + pos.coluna+")");
             }
         }
 
