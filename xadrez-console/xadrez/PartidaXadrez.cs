@@ -14,6 +14,7 @@ namespace xadrez
         public HashSet<Peca> capturadas;
         public bool xeque;
         public Peca vulneravelEnPassant { get; private set; }
+        public Peca promocao { get; private set; }
 
         public PartidaXadrez()
         {
@@ -23,6 +24,7 @@ namespace xadrez
             xeque = false;
             terminada = false;
             vulneravelEnPassant = null;
+            promocao = null;
             pecas = new HashSet<Peca>();
             capturadas = new HashSet<Peca>();
             colocarPecas();
@@ -71,6 +73,44 @@ namespace xadrez
         {
             tab.adicionarPeca(peca, new PosicaoXadrez(linha, coluna).toPosicao());
             pecas.Add(peca);
+        }
+
+        public void checarPromocao()
+        {
+            if (promocao != null)
+            {
+                Console.WriteLine("Peao promovido! Escolha uma promocao:");
+                Console.WriteLine("1 - Bispo.");
+                Console.WriteLine("2 - Cavalo.");
+                Console.WriteLine("3 - Dama.");
+                Console.WriteLine("4 - Torre.");
+                int n = 3;
+                Posicao destino = promocao.pos;
+                tab.retirarPeca(destino);
+                pecas.Remove(promocao);
+                Peca nova = new Dama(tab, promocao.cor);
+
+                if (int.TryParse(Console.ReadLine(), out n))
+                {
+                    if (n == 1)
+                    {
+                        nova = new Bispo(tab, promocao.cor);
+                    }
+                    else if (n == 2)
+                    {
+                        nova = new Cavalo(tab, promocao.cor);
+                    }
+                    else if (n == 4)
+                    {
+                        nova = new Torre(tab, promocao.cor);
+                    }
+                }
+
+                tab.adicionarPeca(nova, destino);
+                pecas.Add(nova);
+                promocao = null;
+                
+            }
         }
 
         public Peca executarMovimento(Posicao origem, Posicao destino)
@@ -130,7 +170,7 @@ namespace xadrez
         {
             Peca pecaCapturada = executarMovimento(origem, destino);
 
-            if(estaEmXeque(jogadorAtual))
+            if (estaEmXeque(jogadorAtual))
             {
                 desfazMovimento(origem, destino, pecaCapturada);
                 throw new TabuleiroException("Voce nao pode se colocar em xeque!");
@@ -145,7 +185,18 @@ namespace xadrez
                 xeque = false;
             }
 
-            if(testeXequeMate(adversaria(jogadorAtual)))
+            Peca p = tab.peca(destino);
+
+            // #jogada especial promocao
+            if(p is Peao)
+            {
+                if((p.cor == Cor.Branca && destino.linha == 0) || (p.cor == Cor.Preta && destino.linha == 7))
+                {
+                    promocao = p;
+                }
+            }
+
+            if (testeXequeMate(adversaria(jogadorAtual)))
             {
                 terminada = true;
             }
@@ -155,7 +206,7 @@ namespace xadrez
                 mudarJogador();
             }
 
-            Peca p = tab.peca(destino);
+            
             if(p is Peao && (origem.linha == destino.linha-2 || origem.linha == destino.linha +2))
             {
                 vulneravelEnPassant = p;
