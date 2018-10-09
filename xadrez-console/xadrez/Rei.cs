@@ -6,12 +6,22 @@ namespace xadrez
 {
     class Rei : Peca
     {
-        public Rei(Tabuleiro tab, Cor cor) : base(tab, cor)
-        { }
+        private PartidaXadrez partida;
+
+        public Rei(Tabuleiro tab, Cor cor, PartidaXadrez partida) : base(tab, cor)
+        {
+            this.partida = partida;
+        }
 
         public override string ToString()
         {
             return "R";
+        }
+
+        private bool testeTorreParaRoque(Posicao pos)
+        {
+            Peca p = tab.peca(pos);
+            return p != null && p is Torre && p.qteMovimentos == 0 && p.cor == cor;
         }
 
         public override bool[,] movimentosPossiveis()
@@ -73,6 +83,38 @@ namespace xadrez
             if (tab.posicaoValida(posicao) && podeMover(posicao))
             {
                 mat[posicao.linha, posicao.coluna] = true;
+            }
+
+            //#jogadaespecial roque
+            if (qteMovimentos == 0 && !partida.xeque)
+            {
+                //#jogadaespecial roque pequeno
+                Posicao[] posicoesDireita = new Posicao[3];
+                for(int i = 0; i<3;i++)
+                {
+                    posicoesDireita[i] = new Posicao(pos.linha, pos.coluna + 1 + i);
+                }
+                if(testeTorreParaRoque(posicoesDireita[2])) //torre
+                {
+                    if(tab.peca(posicoesDireita[0]) == null && tab.peca(posicoesDireita[1]) == null)
+                    {
+                        mat[posicoesDireita[1].linha, posicoesDireita[1].coluna] = true;
+                    }
+                }
+
+                //#jogadaespecial roque grande
+                Posicao[] posicoesEsquerda = new Posicao[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    posicoesEsquerda[i] = new Posicao(pos.linha, pos.coluna - 1 - i);
+                }
+                if (testeTorreParaRoque(posicoesEsquerda[3])) //torre
+                {
+                    if (tab.peca(posicoesEsquerda[0]) == null && tab.peca(posicoesEsquerda[1]) == null && tab.peca(posicoesEsquerda[2]) == null)
+                    {
+                        mat[posicoesEsquerda[1].linha, posicoesEsquerda[1].coluna] = true;
+                    }
+                }
             }
 
             return mat;

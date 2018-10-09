@@ -33,7 +33,7 @@ namespace xadrez
             colocarNovaPeca(1, 'b', new Cavalo(tab, Cor.Branca));
             colocarNovaPeca(1, 'c', new Bispo(tab, Cor.Branca));
             colocarNovaPeca(1, 'd', new Dama(tab, Cor.Branca));
-            colocarNovaPeca(1, 'e', new Rei(tab, Cor.Branca));
+            colocarNovaPeca(1, 'e', new Rei(tab, Cor.Branca, this));
             colocarNovaPeca(1, 'f', new Bispo(tab, Cor.Branca));
             colocarNovaPeca(1, 'g', new Cavalo(tab, Cor.Branca));
             colocarNovaPeca(1, 'h', new Torre(tab, Cor.Branca));
@@ -51,7 +51,7 @@ namespace xadrez
             colocarNovaPeca(8, 'b', new Cavalo(tab, Cor.Preta));
             colocarNovaPeca(8, 'c', new Bispo(tab, Cor.Preta));
             colocarNovaPeca(8, 'd', new Dama(tab, Cor.Preta));
-            colocarNovaPeca(8, 'e', new Rei(tab, Cor.Preta));
+            colocarNovaPeca(8, 'e', new Rei(tab, Cor.Preta, this));
             colocarNovaPeca(8, 'f', new Bispo(tab, Cor.Preta));
             colocarNovaPeca(8, 'g', new Cavalo(tab, Cor.Preta));
             colocarNovaPeca(8, 'h', new Torre(tab, Cor.Preta));
@@ -81,6 +81,27 @@ namespace xadrez
             {
                 capturadas.Add(pDest);
             }
+
+            //#jogadaespecial roque pequeno
+            if(p is Rei && destino.coluna == origem.coluna+2)
+            {
+                Posicao origemT = new Posicao(origem.linha, origem.coluna + 3);
+                Posicao destinoT = new Posicao(origem.linha, origem.coluna + 1);
+                Peca t = tab.retirarPeca(origemT);
+                t.incrementarQteMovimentos();
+                tab.adicionarPeca(t, destinoT);
+            }
+
+            //#jogadaespecial roque grande
+            if (p is Rei && destino.coluna == origem.coluna - 2)
+            {
+                Posicao origemT = new Posicao(origem.linha, origem.coluna - 4);
+                Posicao destinoT = new Posicao(origem.linha, origem.coluna - 1);
+                Peca t = tab.retirarPeca(origemT);
+                t.incrementarQteMovimentos();
+                tab.adicionarPeca(t, destinoT);
+            }
+
             return pDest;
         }
 
